@@ -62,10 +62,11 @@ let generateRandomRestaurantData = function generateRandomRestaurantData() {
   }
 };
 
+
+
 generateRandomRestaurantData();
 
-// console.log(availabilityData[0]);
-// console.log(bookingsData[0]);
+
 
 
 module.exports.availabilityData = availabilityData;

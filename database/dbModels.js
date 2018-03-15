@@ -23,4 +23,4 @@ let Availability = mongoose.model('Reservation', availabilitySchema);
 let Bookings = mongoose.model('Booking', bookingsSchema);
 
 module.exports.availability = Availability;
-module.exports.bookings = Bookings;
+module.exports.bookings = Bookings; 
