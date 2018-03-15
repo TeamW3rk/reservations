@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'); // include DB object
 
-//mongoose.connect('mongodb://localhost/restaurants');
-
+mongoose.connect('mongodb://localhost/restaurants');
 
 const availabilitySchema = mongoose.Schema({
   id: {type:Number, unique: true},
@@ -20,8 +19,8 @@ const bookingsSchema = mongoose.Schema({
   }],
 });
 
-let Availability = mongoose.model('Reservations', availabilitySchema);
-let Bookings = mongoose.model('Bookings', bookingsSchema);
+let Availability = mongoose.model('Reservation', availabilitySchema);
+let Bookings = mongoose.model('Booking', bookingsSchema);
 
 module.exports.availability = Availability;
 module.exports.bookings = Bookings;
