@@ -5,6 +5,10 @@ const mongoose = require('mongoose'); // include DB object
 const seed = require('./dataGenerator');
 const models = require('./dbModels');
 
+console.log(seed.generate1000availibilityData());
+console.log(seed.generate1000bookingData());
+
+
 const Promise = global.Promise
 
 mongoose.connect('mongodb://localhost/restaurants');
@@ -36,4 +40,5 @@ Promise.all([avail, bookings])
     mongoose.connection.close();
     console.log("all done");
   })
+
 

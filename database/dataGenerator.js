@@ -62,12 +62,38 @@ let generateRandomRestaurantData = function generateRandomRestaurantData() {
   }
 };
 
-
-
 generateRandomRestaurantData();
 
+/////////////////////////////////
 
+let generate1000availibilityData = function () {
+  let availabilityData = [];
+  for (let i = 0; i < 1000; i++) {
 
+    let restaurant = { id: i, availability: [], };
+
+    for (let day = 1; day <= 31; day++) {
+      generateRandomTimeSlots(restaurant, day, randomInt(5, 5));
+    }
+    availabilityData.push(restaurant); // push restaurant object into raw data array
+  }
+  return availabilityData[0];
+};
+
+let generate1000bookingData = function () {
+  let bookingsData = [];
+  for (let i = 0; i < 1000; i++) {
+    
+    let bookings = { id: i, bookings: [],};
+    // Generate Time Slots for each of 30 days
+    for (let day = 1; day <= 31; day++) {
+      initializeBookings(bookings, day);
+    }
+    bookingsData.push(bookings);
+  }
+  return bookingsData[0];
+};
+//////////////////////////////////
 
 module.exports.availabilityData = availabilityData;
 module.exports.bookingsData = bookingsData;
@@ -78,3 +104,6 @@ module.exports.randomMinutes = randomMinutes;
 module.exports.randomInt = randomInt;
 module.exports.generateRandomTimeSlots = generateRandomTimeSlots;
 
+
+module.exports.generate1000availibilityData = generate1000availibilityData;
+module.exports.generate1000bookingData = generate1000bookingData;
