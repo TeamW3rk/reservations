@@ -4,10 +4,11 @@ mongoose.connect('mongodb://localhost/restaurants');
 
 const availabilitySchema = mongoose.Schema({
   id: {type:Number, unique: true},
-  availability: [{
-    day: Number,
-    hour: Number,
-    minute: Number
+  //av: String,
+  av: [{
+    d: Number,
+    h: Number,
+    m: Number
   }],
 });
 
