@@ -33,12 +33,15 @@ let initializeBookings = function (restaurant, day) {
 
 let generateRandomTimeSlots = function generateRandomTimeSlots(restaurant, day, numSlots) {
   for (let i = 0; i < numSlots; i++) {
-    restaurant.av.push(
-      {
-      d: day,
-      h: randomInt(15, 22),
-      m: randomMinutes(),
-    });
+  //   restaurant.av.push( day, randomInt(15, 22), randomMinutes()
+      
+  //   //   {
+  //   //   d: day,
+  //   //   h: randomInt(15, 22),
+  //   //   m: randomMinutes(),
+  //   // }
+  // );
+  restaurant.av += day.toString() + randomInt(15, 22).toString() + randomMinutes().toString();
   }
 };
 
@@ -46,10 +49,10 @@ let generateRandomTimeSlots = function generateRandomTimeSlots(restaurant, day, 
 let generateRestaurant = function (id) {
   let restaurant = {
     id: id,
-    av: [],
+    av: '',
   };
   for (let day = 1; day <= 31; day++) {
-   // generateRandomTimeSlots(restaurant, day, randomInt(0, 7)); 
+    generateRandomTimeSlots(restaurant, day, randomInt(0, 7)); 
   }
   return restaurant;
 };
