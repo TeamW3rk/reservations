@@ -66,27 +66,26 @@ var populateDatabaseWithRestaurants = async function() {
   var db = client.db('testrestaurants');
   var collection = db.collection('testrestaurants');
   var id = cluster.worker.id - 1;
-  var availabilityData = [];
   var startTime = new Date();
+  var availabilityData = [];
 
-  var start = id * (1000000 / numCPUs) // 
+  var start = id * (10000000 / numCPUs)  + 1 // 
   var stop = (id + 1) * (10000000 / numCPUs);
-  console.log('worker: ', id, '----',start, '----', stop);
+ // console.log('worker: ', id, '----',start, '----', stop);
 
-  for (var i = start; i < stop; i++) {
-
+  for (var i = start; i <= stop; i++) {
     availabilityData.push(generateRestaurant(i));
 
     if (i % 1000 === 0) {
       await collection.insertMany(availabilityData);
-      availabilityData = [];
+      availabilityData = []
     }
 
     if (i % 1000000 === 0) {
       console.log((new Date() - startTime) / 60000, i);
     }
   } 
-  console.log((new Date() - startTime) / 60000);
+  console.log('Final time in min: ', (new Date() - startTime) / 60000);
   process.exit();
 }
 

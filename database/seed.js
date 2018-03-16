@@ -40,5 +40,3 @@ Promise.all([avail, bookings])
     mongoose.connection.close();
     console.log("all done");
   })
-
-
