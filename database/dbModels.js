@@ -4,12 +4,7 @@ mongoose.connect('mongodb://localhost/restaurants');
 
 const availabilitySchema = mongoose.Schema({
   id: {type:Number, unique: true},
-  //av: String,
-  av: [{
-    d: Number,
-    h: Number,
-    m: Number
-  }],
+  av: String,
 });
 
 const bookingsSchema = mongoose.Schema({

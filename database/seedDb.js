@@ -33,15 +33,7 @@ let initializeBookings = function (restaurant, day) {
 
 let generateRandomTimeSlots = function generateRandomTimeSlots(restaurant, day, numSlots) {
   for (let i = 0; i < numSlots; i++) {
-  //   restaurant.av.push( day, randomInt(15, 22), randomMinutes()
-      
-  //   //   {
-  //   //   d: day,
-  //   //   h: randomInt(15, 22),
-  //   //   m: randomMinutes(),
-  //   // }
-  // );
-  restaurant.av += day.toString() + randomInt(15, 22).toString() + randomMinutes().toString();
+    restaurant.av += day.toString() + ',' + randomInt(15, 22).toString() + ',' + randomMinutes().toString() + ',' ;
   }
 };
 
@@ -74,11 +66,12 @@ var populateDatabaseWithRestaurants = async function() {
   var db = client.db('testrestaurants');
   var collection = db.collection('testrestaurants');
   var id = cluster.worker.id - 1;
-  var availabilityData = []; 
+  var availabilityData = [];
+  var startTime = new Date();
 
   var start = id * (1000000 / numCPUs) // 
   var stop = (id + 1) * (10000000 / numCPUs);
-  //console.log('worker: ', id, '----',start, '----', stop);
+  console.log('worker: ', id, '----',start, '----', stop);
 
   for (var i = start; i < stop; i++) {
 
@@ -90,10 +83,10 @@ var populateDatabaseWithRestaurants = async function() {
     }
 
     if (i % 1000000 === 0) {
-      console.log((new Date() - start) / 60000, i);
+      console.log((new Date() - startTime) / 60000, i);
     }
   } 
-  console.log((new Date() - start) / 60000);
+  console.log((new Date() - startTime) / 60000);
   process.exit();
 }
 
