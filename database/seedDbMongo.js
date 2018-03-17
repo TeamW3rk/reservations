@@ -59,8 +59,6 @@ let generateBookings = function (id) {
   return bookings;
 };
 
-
-
 var populateDatabaseWithRestaurants = async function() {
   var client = await MongoClient.connect(url);
   var db = client.db('testrestaurants');

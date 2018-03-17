@@ -1,7 +1,10 @@
 const Sequelize = require('sequelize');
+const dataGenerator = require('./dataGeneratorPostgreSQL');
+
 const sequelize = new Sequelize('reservations', 'kylechambers', 'password', {
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
+  logging: false
 //   pool: {
 //     max: 9,
 //     min: 0,
@@ -16,22 +19,41 @@ sequelize.authenticate().then(() => {
 });
 
 const Availibility = sequelize.define('availibility', {
-    id: Sequelize.INTEGER,
-    av: Sequelize.STRING
+    restID: Sequelize.INTEGER,
+    av: Sequelize.TEXT
   })
+
   
-sequalize
+sequelize
     .sync({force:true})
     .then(function(){
 
-        
+        var populateDatabaseWithRestaurants = async function() {
+              var startTime = new Date();
+              var availabilityData = [];
+            
+              for (var i = 1; i <= 10000000; i++) {
+                availabilityData.push(dataGenerator.generateRestaurant(i));
+            
+                if (i % 1000 === 0) {
+                  await Availibility.bulkCreate(availabilityData)  
+                  availabilityData = [];
+                }
+            
+                if (i % 1000000 === 0) {
+                  console.log((new Date() - startTime) / 60000, i);
+                }
+              } 
+              console.log('Final time in min: ', (new Date() - startTime) / 60000);
+              process.exit();
+            }
 
-        Availibility.create({
-            id: 'title here',
-            av: 'another thing'
-        })
+            populateDatabaseWithRestaurants();
+
     })
 
 
 
     
+
+
