@@ -104,4 +104,3 @@ if (cluster.isMaster) {
   populateDatabaseWithRestaurants();
   console.log(`Worker ${process.pid} started`);
 }
-
