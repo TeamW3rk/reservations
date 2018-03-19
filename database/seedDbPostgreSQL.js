@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const dataGenerator = require('./dataGeneratorPostgreSQL');
+const dataGenerator = require('./dataGeneratorPostgreSQL2');
 
-const sequelize = new Sequelize('reservations2test', 'kylechambers', 'password', {
+const sequelize = new Sequelize('reservations', 'kylechambers', 'password', {
   host: 'localhost',
   dialect: 'postgres',
   logging: false
@@ -18,40 +18,41 @@ sequelize.authenticate().then(() => {
   console.log(err);
 });
 
-// const City = sequelize.define('city', { countryCode: Sequelize.STRING });
-// const Country = sequelize.define('country', { isoCode: Sequelize.STRING });
-
-// // Here we can connect countries and cities base on country code
-// Country.hasMany(City, {foreignKey: 'countryCode', sourceKey: 'isoCode'});
-// City.belongsTo(Country, {foreignKey: 'countryCode', targetKey: 'isoCode'});
-
-
-
-Task.create({ title: 'foo', description: 'bar', deadline: new Date() }).then(task => {
-  // you can now access the newly created task via the variable task
-})
+const Restaurant = sequelize.define('restaurant', {
+  id: { 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
+  name: Sequelize.STRING,
+  numBookings: Sequelize.INTEGER,
+  av: Sequelize.INTEGER
+});
 
 const Availibility = sequelize.define('availibility', {
+  restaurant_id: Sequelize.INTEGER,
+  time_id: Sequelize.INTEGER
+});
+
+const Time = sequelize.define('time', {
   day: Sequelize.INTEGER,
   hour: Sequelize.INTEGER,
   min: Sequelize.INTEGER
-  // restID: Sequelize.INTEGER,
-  // av: Sequelize.TEXT
-})
-
-const Restaurant = sequelize.define('restaurant', {GIT
-  
 });
 
-Restaurnt.hasMany(Availibility, {foreignKey: '', sourceKey: ''});
-Availibility.belongsTo(Restaurant, {foreignKey: '', targetKey: ''});
- 
+
+// console.log(dataGenerator.availibilitySlots);
 sequelize
     .sync({force:true})
     .then(function(){
-      Availibility.create({
 
-      });
+      Time.bulkCreate(dataGenerator.availibilitySlots);
+      
+      // Restaurant.hasMany(Availibility, {foreignKey: 'restaurant_id', sourceKey: 'id'});
+      // Availibility.belongsTo(Restaurant, {foreignKey: 'restaurant_id', targetKey: 'id'});
+
+      // Availibility.create({
+
+      // });
     })
 
 // sequelize
@@ -86,3 +87,13 @@ sequelize
     
 
 
+// const City = sequelize.define('city', { countryCode: Sequelize.STRING });
+// const Country = sequelize.define('country', { isoCode: Sequelize.STRING });
+
+// // Here we can connect countries and cities base on country code
+
+// Country.hasMany(City, {foreignKey: 'countryCode', sourceKey: 'isoCode'});
+// City.belongsTo(Country, {foreignKey: 'countryCode', targetKey: 'isoCode'});
+
+// City.create({countryCode: 'something'})
+// Country.create({ isoCode: 'something'})
