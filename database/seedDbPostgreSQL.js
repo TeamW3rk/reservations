@@ -50,21 +50,12 @@ const Time = sequelize.define('time', {
 
 
 // console.log(dataGenerator.availibilitySlots);
-function seedDB (){
+function seedDB(){
   sequelize
     .sync({force:true})
     .then(function(){
       
-      
-      Availibility.belongsTo(Restaurant); 
-      Restaurant.hasMany(Availibility);
-
-      Availibility.belongsTo(Time);
-      Availibility.hasOne(Time);
-
-      Time.bulkCreate(dataGenerator.availibilitySlots);
-
-      for (let i = 0; i < 10; i++){
+      for (let i = 1; i <= 10; i++){
         let restaurantName = dataGenerator.generateRestaurantName();
 
         Restaurant.create({
@@ -73,8 +64,15 @@ function seedDB (){
           numBookings: 11
         });
       }
-      
-      for (let i = 0; i < 10; i++){
+
+    })
+    .then(function(){
+      Availibility.belongsTo(Restaurant); 
+     // Restaurant.hasMany(Availibility);
+    })
+    .then(function(){
+          
+      for (let i = 1; i <= 10; i++){
        
         Availibility.create({
           restaurantId: 12,
@@ -82,25 +80,43 @@ function seedDB (){
         });
       }
 
-
+    })
+    .then(function(){
+      Availibility.belongsTo(Time);
+      //Availibility.hasOne(Time);
+    })
+    .then(function(){
+      Time.bulkCreate(dataGenerator.availibilitySlots);
     })
 }
 
+
 // seedDB();
    
-Availibility.findAll({
-  where: {
-    restaurantId: 12
-  }
-}).then(item => {
-  console.log(item);
+// Availibility.findAll({
+//   where: {
+//     restaurantId: 12
+//   }
+// }).then(item => {
+//   //console.log(item);
 
-  item.forEach(function(row){
-    console.log(row.dataValues.timeId);
+//   item.forEach( (row) => {
+//     //console.log(row.dataValues.timeId);
+//     Time.findOne({
+//       where: {
+//         id: row.dataValues.timeId
+//       }
+//     }).then((row) => {
+//       // console.log(row);
+//       console.log(
+//         ' day ', row.dataValues.day, 
+//         ' hour ', row.dataValues.hour, 
+//         ' min ', row.dataValues.min
+//       );
+//     })
+//   })
 
-    
-  })
-})
+// })
 
 // Availibility.findAll({
 //   include: [{
