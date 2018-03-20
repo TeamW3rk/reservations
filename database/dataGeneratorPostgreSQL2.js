@@ -1,3 +1,4 @@
+var faker = require('faker');
 let minIncrements = [0, 15, 30, 45];
 let availibilitySlots = [];
 
@@ -15,6 +16,17 @@ for (let day = 1; day <= 31; day++) {
     }
 }
 
-console.log(typeof availibilitySlots[availibilitySlots.length -1].day);
+function randomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+}
+
+function generateRestaurantName () {
+    return faker.company.companyName()
+}
+
 
 module.exports.availibilitySlots = availibilitySlots;
+module.exports.generateRestaurantName = generateRestaurantName;
+

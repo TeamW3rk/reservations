@@ -1,16 +1,21 @@
 const Sequelize = require('sequelize');
 const dataGenerator = require('./dataGeneratorPostgreSQL2');
 
+
 const sequelize = new Sequelize('reservations', 'kylechambers', 'password', {
   host: 'localhost',
   dialect: 'postgres',
-  logging: false
-//   pool: {
-//     max: 9,
-//     min: 0,
-//     idle: 10000
-//   }
+  logging: false,
+  define: {
+    timestamps: false // true by default
+  },
+  pool: {
+    max: 9,
+    min: 0,
+    idle: 10000
+  }
 });
+
 
 sequelize.authenticate().then(() => {
   console.log("Success!");
@@ -25,12 +30,16 @@ const Restaurant = sequelize.define('restaurant', {
   },
   name: Sequelize.STRING,
   numBookings: Sequelize.INTEGER,
-  av: Sequelize.INTEGER
 });
 
 const Availibility = sequelize.define('availibility', {
-  restaurant_id: Sequelize.INTEGER,
-  time_id: Sequelize.INTEGER
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  restaurantId: Sequelize.INTEGER,
+  timeId: Sequelize.INTEGER
 });
 
 const Time = sequelize.define('time', {
@@ -41,19 +50,71 @@ const Time = sequelize.define('time', {
 
 
 // console.log(dataGenerator.availibilitySlots);
-sequelize
+function seedDB (){
+  sequelize
     .sync({force:true})
     .then(function(){
+      
+      
+      Availibility.belongsTo(Restaurant); 
+      Restaurant.hasMany(Availibility);
+
+      Availibility.belongsTo(Time);
+      Availibility.hasOne(Time);
 
       Time.bulkCreate(dataGenerator.availibilitySlots);
+
+      for (let i = 0; i < 10; i++){
+        let restaurantName = dataGenerator.generateRestaurantName();
+
+        Restaurant.create({
+          id: i,
+          name: restaurantName,
+          numBookings: 11
+        });
+      }
       
-      // Restaurant.hasMany(Availibility, {foreignKey: 'restaurant_id', sourceKey: 'id'});
-      // Availibility.belongsTo(Restaurant, {foreignKey: 'restaurant_id', targetKey: 'id'});
+      for (let i = 0; i < 10; i++){
+       
+        Availibility.create({
+          restaurantId: 12,
+          timeId: i
+        });
+      }
 
-      // Availibility.create({
 
-      // });
     })
+}
+
+// seedDB();
+   
+Availibility.findAll({
+  where: {
+    restaurantId: 12
+  }
+}).then(item => {
+  console.log(item);
+
+  item.forEach(function(row){
+    console.log(row.dataValues.timeId);
+
+    
+  })
+})
+
+// Availibility.findAll({
+//   include: [{
+//     model: Time,
+//     where: {
+//       timeId: Sequelize.col('availibility.timeId')
+//     }
+//   }]
+// }).then(item => {
+//   console.log(item);
+
+
+// })
+
 
 // sequelize
 //     .sync({force:true})
@@ -81,19 +142,3 @@ sequelize
 //             populateDatabaseWithRestaurants();
 
 //     })
-
-
-
-    
-
-
-// const City = sequelize.define('city', { countryCode: Sequelize.STRING });
-// const Country = sequelize.define('country', { isoCode: Sequelize.STRING });
-
-// // Here we can connect countries and cities base on country code
-
-// Country.hasMany(City, {foreignKey: 'countryCode', sourceKey: 'isoCode'});
-// City.belongsTo(Country, {foreignKey: 'countryCode', targetKey: 'isoCode'});
-
-// City.create({countryCode: 'something'})
-// Country.create({ isoCode: 'something'})
