@@ -43,6 +43,11 @@ const Availibility = sequelize.define('availibility', {
 });
 
 const Time = sequelize.define('time', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   day: Sequelize.INTEGER,
   hour: Sequelize.INTEGER,
   min: Sequelize.INTEGER
@@ -66,10 +71,10 @@ function seedDB(){
       }
 
     })
-    .then(function(){
-      Availibility.belongsTo(Restaurant); 
-     // Restaurant.hasMany(Availibility);
-    })
+    // .then(function(){
+    //   Availibility.belongsTo(Restaurant); 
+    //   Restaurant.hasMany(Availibility);
+    // })
     .then(function(){
           
       for (let i = 1; i <= 10; i++){
@@ -82,14 +87,13 @@ function seedDB(){
 
     })
     .then(function(){
-      Availibility.belongsTo(Time);
-      //Availibility.hasOne(Time);
+      Time.belongsTo(Availibility);
+      //Availibility.hasOne(Time, {foreignKey: 'id'});
     })
     .then(function(){
       Time.bulkCreate(dataGenerator.availibilitySlots);
     })
 }
-
 
 // seedDB();
    
@@ -118,18 +122,20 @@ function seedDB(){
 
 // })
 
-// Availibility.findAll({
-//   include: [{
-//     model: Time,
-//     where: {
-//       timeId: Sequelize.col('availibility.timeId')
-//     }
-//   }]
-// }).then(item => {
-//   console.log(item);
 
-
-// })
+Availibility.findAll({
+  where: {
+    restaurantId: 12
+  },
+  include: [{
+    model: Time,
+    where: {
+      timeId: Sequelize.col('availibility.timeId')
+    }
+  }]
+}).then(item => {
+  console.log(item);
+})
 
 
 // sequelize
