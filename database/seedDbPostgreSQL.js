@@ -30,17 +30,13 @@ const Restaurant = sequelize.define('restaurant', {
   },
   name: Sequelize.STRING,
   numBookings: Sequelize.INTEGER,
-});
-
-const Availibility = sequelize.define('availibility', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  restaurantId: Sequelize.INTEGER,
-  timeId: Sequelize.INTEGER
-});
+}
+// ,{
+//   associate: function(models){
+//     models.Restaurant.belongsToMany(Time, {through: 'Availibility'})
+//   }
+// }
+);
 
 const Time = sequelize.define('time', {
   id: {
@@ -51,8 +47,29 @@ const Time = sequelize.define('time', {
   day: Sequelize.INTEGER,
   hour: Sequelize.INTEGER,
   min: Sequelize.INTEGER
-});
+}
+// ,{
+//   associate: function(models){
+//     models.Time.belongsToMany(Restaurant, {through: 'Availibility'})
+//   }
+// }
+);
 
+// Restaurant.associate = (models) => {
+//   Restaurant.belongsToMany(models.Time, {
+//     through: 'Availibility'
+//   });
+// };
+
+// Time.associate = (models) => {
+//   Time.belongsToMany(models.Availibility, {
+//     through: 'Time'
+//   });
+// };
+
+
+Restaurant.belongsToMany(Time, {through: 'Availibility'});
+Time.belongsToMany(Restaurant, {through: 'Availibility'});
 
 // console.log(dataGenerator.availibilitySlots);
 function seedDB(){
@@ -71,71 +88,37 @@ function seedDB(){
       }
 
     })
-    // .then(function(){
-    //   Availibility.belongsTo(Restaurant); 
-    //   Restaurant.hasMany(Availibility);
-    // })
-    .then(function(){
-          
-      for (let i = 1; i <= 10; i++){
-       
-        Availibility.create({
-          restaurantId: 12,
-          timeId: i
-        });
-      }
 
-    })
-    .then(function(){
-      Time.belongsTo(Availibility);
-      //Availibility.hasOne(Time, {foreignKey: 'id'});
-    })
+    // .then(function(){
+    //   Restaurant.belongsToMany(Time, {through: 'Availibility'});
+    //   Time.belongsToMany(Restaurant, {through: 'Availibility'});
+    // })
+
     .then(function(){
       Time.bulkCreate(dataGenerator.availibilitySlots);
     })
+
+
 }
 
-// seedDB();
+seedDB();
    
+
+
+
 // Availibility.findAll({
 //   where: {
 //     restaurantId: 12
-//   }
+//   },
+//   include: [{
+//     model: Time,
+//     where: {
+//       timeId: Sequelize.col('availibility.timeId')
+//     }
+//   }]
 // }).then(item => {
-//   //console.log(item);
-
-//   item.forEach( (row) => {
-//     //console.log(row.dataValues.timeId);
-//     Time.findOne({
-//       where: {
-//         id: row.dataValues.timeId
-//       }
-//     }).then((row) => {
-//       // console.log(row);
-//       console.log(
-//         ' day ', row.dataValues.day, 
-//         ' hour ', row.dataValues.hour, 
-//         ' min ', row.dataValues.min
-//       );
-//     })
-//   })
-
+//   console.log(item);
 // })
-
-
-Availibility.findAll({
-  where: {
-    restaurantId: 12
-  },
-  include: [{
-    model: Time,
-    where: {
-      timeId: Sequelize.col('availibility.timeId')
-    }
-  }]
-}).then(item => {
-  console.log(item);
-})
 
 
 // sequelize
