@@ -30,13 +30,7 @@ const Restaurant = sequelize.define('restaurant', {
   },
   name: Sequelize.STRING,
   numBookings: Sequelize.INTEGER,
-}
-// ,{
-//   associate: function(models){
-//     models.Restaurant.belongsToMany(Time, {through: 'Availibility'})
-//   }
-// }
-);
+});
 
 const Time = sequelize.define('time', {
   id: {
@@ -47,37 +41,45 @@ const Time = sequelize.define('time', {
   day: Sequelize.INTEGER,
   hour: Sequelize.INTEGER,
   min: Sequelize.INTEGER
-}
-// ,{
-//   associate: function(models){
-//     models.Time.belongsToMany(Restaurant, {through: 'Availibility'})
-//   }
-// }
-);
-
-// Restaurant.associate = (models) => {
-//   Restaurant.belongsToMany(models.Time, {
-//     through: 'Availibility'
-//   });
-// };
-
-// Time.associate = (models) => {
-//   Time.belongsToMany(models.Availibility, {
-//     through: 'Time'
-//   });
-// };
+});
 
 
-Restaurant.belongsToMany(Time, {through: 'Availibility'});
-Time.belongsToMany(Restaurant, {through: 'Availibility'});
+const Availibilities = sequelize.define('availibilities', {
+  identifier: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
 
-// console.log(dataGenerator.availibilitySlots);
+  // restaurantId: {
+  //   type: Sequelize.INTEGER,
+  //   references: {
+  //     model: Restaurant,
+  //     key: 'id'
+  //   },
+  // },
+  
+  // timeId: {
+  //   type: Sequelize.INTEGER,
+  //   references: {
+  //     model: Time,
+  //     key: 'id'
+  //   },
+  // }
+})
+
+Restaurant.belongsToMany(Time, {through: 'availibilities'});
+Time.belongsToMany(Restaurant, {through: 'availibilities'});
+
+
 function seedDB(){
   sequelize
-    .sync({force:true})
+    .sync(
+      // {force:true}
+    )
     .then(function(){
       
-      for (let i = 1; i <= 10; i++){
+      for (let i = 1; i <= 100; i++){
         let restaurantName = dataGenerator.generateRestaurantName();
 
         Restaurant.create({
@@ -85,40 +87,110 @@ function seedDB(){
           name: restaurantName,
           numBookings: 11
         });
+
       }
 
     })
-
-    // .then(function(){
-    //   Restaurant.belongsToMany(Time, {through: 'Availibility'});
-    //   Time.belongsToMany(Restaurant, {through: 'Availibility'});
-    // })
-
     .then(function(){
       Time.bulkCreate(dataGenerator.availibilitySlots);
     })
+    // .then(function(){
 
+    //   let populateJoinTable = function(){
+    //     let avail = [{
+    //       restaurantId: 2,
+    //       timeId: 2
+    //     },{
+    //       restaurantId: 1,
+    //       timeId: 30
+    //     }];
 
+    //     for (let i = 1; i <= 10; i++){
+    //       let availibility = {
+    //         restaurantId: i,
+    //         timeId: 2
+    //       };
+    //       availibilities.push(availibility);
+    //     }
+
+    //     Availibilities.bulkCreate(avail)
+    //   }
+    //   populateJoinTable();
+
+    // })
+
+///////////////////////
+
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 1,
+    //     timeId: 2
+    //   }) 
+    // })
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 1,
+    //     timeId: 4
+    //   }) 
+    // })
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 1,
+    //     timeId: 12
+    //   }) 
+    // })
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 2,
+    //     timeId: 2
+    //   }) 
+    // })
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 2,
+    //     timeId: 4
+    //   }) 
+    // })
+    // .then(function(){
+    //   Availibilities.create({
+    //     restaurantId: 2,
+    //     timeId: 6
+    //   }) 
+    // })
+    // .then(function(){
+    //   console.log('seeded db')
+    // })
+    // .catch(function(err) {
+
+    //     console.log(err);
+    // });
+
+   
 }
 
-seedDB();
+// seedDB();
    
 
 
+sequelize
+  .sync()
+  .then(function(){
+    Availibilities.findAll({
+      where: {
+        restaurantId: 1
+      },
+      include: {
+        model: Time,
 
-// Availibility.findAll({
-//   where: {
-//     restaurantId: 12
-//   },
-//   include: [{
-//     model: Time,
-//     where: {
-//       timeId: Sequelize.col('availibility.timeId')
-//     }
-//   }]
-// }).then(item => {
-//   console.log(item);
-// })
+      }
+    })
+    .then(item => {
+      // console.log(item[0].attributes);
+    })
+  })
+
+
+
 
 
 // sequelize

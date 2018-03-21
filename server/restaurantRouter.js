@@ -20,10 +20,10 @@ router.get('/:id/reservations', (req,res)=>{
   
   var hour = +time.split(':')[0]; //extract hour from time property
   
-  reservations.availability(req.params.id, res, (data)=>{
+  reservations.availability(req.params.id, res, (data) => {
 
     var availability = data.availability;
-    var times = availability.filter(table=> {
+    var times = availability.filter(table => {
   
       return ((table.day === day) && ((hour+1 >= table.hour) && (table.hour >= hour-1)));
 
