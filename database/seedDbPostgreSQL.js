@@ -5,7 +5,7 @@ const dataGenerator = require('./dataGeneratorPostgreSQL2');
 const sequelize = new Sequelize('reservations', 'kylechambers', 'password', {
   host: 'localhost',
   dialect: 'postgres',
-  logging: false,
+  logging: console.log,
   define: {
     timestamps: false // true by default
   },
@@ -68,10 +68,8 @@ const Availibilities = sequelize.define('availibilities', {
 //   // }
 })
 
-Restaurant.belongsToMany(Time, {through: Availibilities});
-Time.belongsToMany(Restaurant, {through: Availibilities});
-// Availibilities.belongsToMany(Restaurant);
-// Availibilities.belongsToMany(Time);
+Restaurant.belongsToMany(Time, {through: Availibilities, foreignKey: 'restaurantId'});
+Time.belongsToMany(Restaurant, {through: Availibilities, foreignKey: 'timeId'});
 
 
 function seedDB(){
@@ -100,21 +98,16 @@ function seedDB(){
     .then(function(){
 
       let populateJoinTable = function(){
-        let avail = [{
-          restaurantId: 1,
-          timeId: 2
-        },{
-          restaurantId: 1,
-          timeId: 4
-        }];
 
-        // for (let i = 1; i <= 10; i++){
-        //   let availibility = {
-        //     restaurantId: i,
-        //     timeId: 2
-        //   };
-        //   availibilities.push(availibility);
-        // }
+        let avail = [];
+
+        for (let i = 1; i <= 100; i++){
+          let availibility = {
+            restaurantId: i,
+            timeId: 2
+          };
+          avail.push(availibility);
+        }
 
         Availibilities.bulkCreate(avail)
       }
@@ -194,27 +187,58 @@ function seedDB(){
 Availibilities.findAll({
   where: {
     restaurantId: 1
-  }
-}).then(item => {
-  //console.log(item);
-
-  item.forEach( (row) => {
-    //console.log(row.dataValues.timeId);
-    Time.findOne({
-      where: {
-        id: row.dataValues.timeId
-      }
-    }).then((row) => {
-      // console.log(row);
-      console.log(
-        ' day ', row.dataValues.day, 
-        ' hour ', row.dataValues.hour, 
-        ' min ', row.dataValues.min
-      );
-    })
-  })
-
+  },
+  include: [{
+    where: {
+      timeId: "time.id"
+    },
+    model: Time
+  }]
 })
+// .then(item => {
+//   //console.log(item);
+//   item.forEach( (row) => {
+//     //console.log(row.dataValues.timeId);
+//     Time.findOne({
+//       where: {
+//         id: row.dataValues.timeId
+//       }
+//     }).then((row) => {
+//       // console.log(row);
+//       console.log(
+//         ' day ', row.dataValues.day, 
+//         ' hour ', row.dataValues.hour, 
+//         ' min ', row.dataValues.min
+//       );
+//     })
+//   })
+// })
+
+
+
+// Availibilities.findAll({
+//   where: {
+//     restaurantId: 1
+//   }
+// })
+// .then(item => {
+//   //console.log(item);
+//   item.forEach( (row) => {
+//     //console.log(row.dataValues.timeId);
+//     Time.findOne({
+//       where: {
+//         id: row.dataValues.timeId
+//       }
+//     }).then((row) => {
+//       // console.log(row);
+//       console.log(
+//         ' day ', row.dataValues.day, 
+//         ' hour ', row.dataValues.hour, 
+//         ' min ', row.dataValues.min
+//       );
+//     })
+//   })
+// })
 
 
 // sequelize
