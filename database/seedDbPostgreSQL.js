@@ -51,73 +51,76 @@ const Availibilities = sequelize.define('availibilities', {
     autoIncrement: true
   },
 
-  // restaurantId: {
-  //   type: Sequelize.INTEGER,
-  //   references: {
-  //     model: Restaurant,
-  //     key: 'id'
-  //   },
-  // },
+//   // restaurantId: {
+//   //   type: Sequelize.INTEGER,
+//   //   references: {
+//   //     model: Restaurant,
+//   //     key: 'id'
+//   //   },
+//   // },
   
-  // timeId: {
-  //   type: Sequelize.INTEGER,
-  //   references: {
-  //     model: Time,
-  //     key: 'id'
-  //   },
-  // }
+//   // timeId: {
+//   //   type: Sequelize.INTEGER,
+//   //   references: {
+//   //     model: Time,
+//   //     key: 'id'
+//   //   },
+//   // }
 })
 
-Restaurant.belongsToMany(Time, {through: 'availibilities'});
-Time.belongsToMany(Restaurant, {through: 'availibilities'});
+Restaurant.belongsToMany(Time, {through: Availibilities});
+Time.belongsToMany(Restaurant, {through: Availibilities});
+// Availibilities.belongsToMany(Restaurant);
+// Availibilities.belongsToMany(Time);
 
 
 function seedDB(){
   sequelize
     .sync(
-      // {force:true}
+       {force:true}
     )
     .then(function(){
       
+      var arrayOfPromises = []
       for (let i = 1; i <= 100; i++){
         let restaurantName = dataGenerator.generateRestaurantName();
 
-        Restaurant.create({
+        arrayOfPromises.push(Restaurant.create({
           id: i,
           name: restaurantName,
           numBookings: 11
-        });
+        }));
 
       }
-
+      return Promise.all(arrayOfPromises)
     })
     .then(function(){
-      Time.bulkCreate(dataGenerator.availibilitySlots);
+      return Time.bulkCreate(dataGenerator.availibilitySlots);
     })
-    // .then(function(){
+    .then(function(){
 
-    //   let populateJoinTable = function(){
-    //     let avail = [{
-    //       restaurantId: 2,
-    //       timeId: 2
-    //     },{
-    //       restaurantId: 1,
-    //       timeId: 30
-    //     }];
+      let populateJoinTable = function(){
+        let avail = [{
+          restaurantId: 1,
+          timeId: 2
+        },{
+          restaurantId: 1,
+          timeId: 4
+        }];
 
-    //     for (let i = 1; i <= 10; i++){
-    //       let availibility = {
-    //         restaurantId: i,
-    //         timeId: 2
-    //       };
-    //       availibilities.push(availibility);
-    //     }
+        // for (let i = 1; i <= 10; i++){
+        //   let availibility = {
+        //     restaurantId: i,
+        //     timeId: 2
+        //   };
+        //   availibilities.push(availibility);
+        // }
 
-    //     Availibilities.bulkCreate(avail)
-    //   }
-    //   populateJoinTable();
+        Availibilities.bulkCreate(avail)
+      }
+      populateJoinTable();
 
-    // })
+    })
 
 ///////////////////////
 
@@ -172,25 +175,46 @@ function seedDB(){
    
 
 
-sequelize
-  .sync()
-  .then(function(){
-    Availibilities.findAll({
-      where: {
-        restaurantId: 1
-      },
-      include: {
-        model: Time,
+// sequelize
+//   .sync()
+//   .then(function(){
 
+//   })
+
+// Availibilities.find({
+//   logger: console.log,
+//   where: {id : 1}
+// })
+// .then(() => {
+//   console.log(item);
+// })
+
+
+
+Availibilities.findAll({
+  where: {
+    restaurantId: 1
+  }
+}).then(item => {
+  //console.log(item);
+
+  item.forEach( (row) => {
+    //console.log(row.dataValues.timeId);
+    Time.findOne({
+      where: {
+        id: row.dataValues.timeId
       }
-    })
-    .then(item => {
-      // console.log(item[0].attributes);
+    }).then((row) => {
+      // console.log(row);
+      console.log(
+        ' day ', row.dataValues.day, 
+        ' hour ', row.dataValues.hour, 
+        ' min ', row.dataValues.min
+      );
     })
   })
 
-
-
+})
 
 
 // sequelize
