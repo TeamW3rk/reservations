@@ -29,6 +29,6 @@ function generateRestaurantName () {
     return faker.company.companyName()
 }
 
-
+module.exports.randomInt = randomInt
 module.exports.availibilitySlots = availibilitySlots;
 module.exports.generateRestaurantName = generateRestaurantName;

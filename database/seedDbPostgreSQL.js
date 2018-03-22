@@ -37,8 +37,8 @@ const csTime = new pgp.helpers.ColumnSet(
 
 
 const csRestaurants = new pgp.helpers.ColumnSet(
-  ['id', 'day', 'hour', 'min'],
-  {table: 'time_slots'},
+  ['id', 'name', 'bookings'],
+  {table: 'restaurants'},
 ); 
 
 
@@ -50,7 +50,31 @@ const createTimeSlots = async (db) => {
 }
 
 const createRestaurants = async (db) => {
+  let startTime = new Date();
+  let restaurantsData = []
 
+
+  for (let i = 1; i <= 1000; i++){
+    let restaurantName = data.generateRestaurantName();
+    let rest = {
+      id: i,
+      name: restaurantName,
+      bookings: data.randomInt(0, 50)
+    }
+
+    restaurantsData.push(rest);
+
+    if (i % 1000 === 0) {
+      await db.none(pgp.helpers.insert(restaurantsData, csRestaurants));
+      restaurantsData = [];
+    }
+    
+    if (i % 1000000 === 0) {
+      console.log((new Date() - startTime) / 60000, i);
+    }
+    
+  }
+  console.log('Restaurant table seeding Final time in min: ', (new Date() - startTime) / 60000);
 }
 
 const createAvailibilites = async (db) => {
@@ -62,6 +86,7 @@ const createAvailibilites = async (db) => {
   
   await Promise.all([
     createTimeSlots(db),
+    createRestaurants(db)
   ]);
  }
 
