@@ -30,17 +30,31 @@ const createTable = async () => {
 };
 
 
-const cs = new pgp.helpers.ColumnSet(
+const csTime = new pgp.helpers.ColumnSet(
   ['id', 'day', 'hour', 'min'],
   {table: 'time_slots'},
-  ); 
+); 
+
+
+const csRestaurants = new pgp.helpers.ColumnSet(
+  ['id', 'day', 'hour', 'min'],
+  {table: 'time_slots'},
+); 
 
 
 const createTimeSlots = async (db) => {
-  await db.none(pgp.helpers.insert(data.availibilitySlots, cs))
+  await db.none(pgp.helpers.insert(data.availibilitySlots, csTime))
   .then(()=>{
     console.log('done making timeSlots table')
   })
+}
+
+const createRestaurants = async (db) => {
+
+}
+
+const createAvailibilites = async (db) => {
+  
 }
 
  const seedDB = async () => {
@@ -55,3 +69,4 @@ const createTimeSlots = async (db) => {
  .then(()=>{
    console.log(' woo hoo!')
  });
+
