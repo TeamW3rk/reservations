@@ -1,37 +1,57 @@
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('reservations', 'kylechambers', 'password', {
-  host: 'localhost',
-  dialect: 'postgres'
-//   pool: {
-//     max: 9,
-//     min: 0,
-//     idle: 10000
-//   }
-});
+const pgp = require('pg-promise')({});
+const schema = 'CREATE DATABASE reservations2';
+const path = require('path');
+const data = require('./generateDataPg');
+const QueryFile = pgp.QueryFile;
 
-sequelize.authenticate().then(() => {
-  console.log("Success!");
-}).catch((err) => {
-  console.log(err);
-});
+const sql = (file) => {
+   const filePath  = path.join(__dirname, file);
+   return new QueryFile(filePath, { minify: true });
+}
 
-const Availibility = sequelize.define('availibility', {
-    id: Sequelize.INTEGER,
-    av: Sequelize.STRING
+const table = sql('/table.sql');
+
+const createTable = async () => {
+  let db = pgp({
+    host: 'localhost', 
+    port: 5432, 
+    database: 'postgres',
+    user: 'kylechambers'
+  });
+  await db.none(schema);
+  db.$pool.end;
+  db = pgp({
+    host: 'localhost', 
+    port: 5432, 
+    database: 'reservations2',
+    user: 'kylechambers'
   })
+  return db.none(table).then(() => db)
+};
+
+
+const cs = new pgp.helpers.ColumnSet(
+  ['id', 'day', 'hour', 'min'],
+  {table: 'time_slots'},
+  ); 
+
+
+const createTimeSlots = async (db) => {
+  await db.none(pgp.helpers.insert(data.availibilitySlots, cs))
+  .then(()=>{
+    console.log('done making timeSlots table')
+  })
+}
+
+ const seedDB = async () => {
+  const db =  await createTable();
   
-sequalize
-    .sync({force:true})
-    .then(function(){
+  await Promise.all([
+    createTimeSlots(db),
+  ]);
+ }
 
-        
-
-        Availibility.create({
-            id: 'title here',
-            av: 'another thing'
-        })
-    })
-
-
-
-    
+ seedDB()
+ .then(()=>{
+   console.log(' woo hoo!')
+ });
