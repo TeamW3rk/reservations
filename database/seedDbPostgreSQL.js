@@ -135,3 +135,7 @@ const createAvailibilites = async (db) => {
 //  FROM availibilities JOIN time_slots ON (availibilities.time_id = time_slots.id) 
 //  WHERE availibilities.restaurant_id = 100000; 
  
+// for query --> bookings
+// SELECT 
+// 	bookings FROM restaurants
+// 	WHERE id = 18;

@@ -16,3 +16,5 @@ CREATE TABLE time_slots (
     hour INT,
     min INT
 );
+
+
