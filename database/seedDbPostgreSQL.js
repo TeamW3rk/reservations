@@ -10,6 +10,7 @@ const sql = (file) => {
 }
 
 const table = sql('/table.sql');
+const associateTables = sql('/associate.sql');
 
 const createTable = async () => {
   let db = pgp({
@@ -29,12 +30,10 @@ const createTable = async () => {
   return db.none(table).then(() => db)
 };
 
-
 const csTime = new pgp.helpers.ColumnSet(
   ['id', 'day', 'hour', 'min'],
   {table: 'time_slots'},
 ); 
-
 
 const csRestaurants = new pgp.helpers.ColumnSet(
   ['id', 'name', 'bookings'],
@@ -49,7 +48,7 @@ const csAvailibilites = new pgp.helpers.ColumnSet(
 const createTimeSlots = async (db) => {
   await db.none(pgp.helpers.insert(data.availibilitySlots, csTime))
   .then(()=>{
-    console.log('done making timeSlots table')
+    console.log('Done making timeSlots table')
   })
 }
 
@@ -58,7 +57,7 @@ const createRestaurants = async (db) => {
   let restaurantsData = []
 
 
-  for (let i = 1; i <= 1000; i++){
+  for (let i = 1; i <= 10000000; i++){
     let restaurantName = data.generateRestaurantName();
     let rest = {
       id: i,
@@ -74,7 +73,7 @@ const createRestaurants = async (db) => {
     }
     
     if (i % 1000000 === 0) {
-      console.log((new Date() - startTime) / 60000, i);
+      console.log('Restaurants -- ', (new Date() - startTime) / 60000, i);
     }
     
   }
@@ -82,16 +81,17 @@ const createRestaurants = async (db) => {
 }
 
 const createAvailibilites = async (db) => {
+  let startTime = new Date();
   let avail = [];
   let id = 0; 
 
-  for (let i = 1; i <= 10000; i++){ // 10000000
-    for (let j = 1; j <= 10; j++){
+  for (let i = 1; i <= 10000000; i++){ // 10000000
+    for (let j = 1; j <= data.randomInt(1, 7); j++){
       id++
       let availibility = {
         id: id,
         restaurant_id: i,
-        time_id: j
+        time_id: data.randomInt(1, 2976)
       };
       avail.push(availibility);
     }
@@ -100,9 +100,14 @@ const createAvailibilites = async (db) => {
       await db.none(pgp.helpers.insert(avail, csAvailibilites));
       avail = [];
     }
+
+    if (i % 1000000 === 0) {
+      console.log('Availibilities -- ', (new Date() - startTime) / 60000, i);
+    }
+
   }
 
-  console.log('done');
+  console.log('Availibility table seeding Final time in min: ', (new Date() - startTime) / 60000);
 }
 
  const seedDB = async () => {
@@ -113,10 +118,20 @@ const createAvailibilites = async (db) => {
     createRestaurants(db),
     createAvailibilites(db)
   ]);
+
+  return db;
  }
+ 
  seedDB()
+ .then((db)=>{
+  db.none(associateTables);
+ })
  .then(()=>{
-   console.log(' woo hoo!')
+   console.log('All tables populated');
  });
 
-
+// for query
+//  SELECT  *
+//  FROM availibilities JOIN time_slots ON (availibilities.time_id = time_slots.id) 
+//  WHERE availibilities.restaurant_id = 100000; 
+ 
