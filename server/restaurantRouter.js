@@ -12,10 +12,12 @@ router.use('/:id', express.static('public'));
 router.get('/:id/reservations', (req,res)=>{
 
   //parse request params from URL
+  // console.log(req.url);
   var requestedTimes = JSON.parse(decodeURIComponent(url.parse(req.url).query));
-
+  // console.log(typeof requestedTimes.date);
+  // console.log(requestedTimes);
   //extract day & time from date property
-  var day = (new Date(requestedTimes.date)).getUTCDate();
+  var day = (new Date(requestedTimes.date)).getUTCDate(); // Hardcoded date.....
   var time = requestedTimes.time;
   
   var hour = +time.split(':')[0]; //extract hour from time property

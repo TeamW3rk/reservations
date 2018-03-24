@@ -1,0 +1,16 @@
+config:
+  target: 'http://localhost:2003'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - flow:
+      - loop:
+          - get:
+              url: "/r/4"
+        count: 50
+
+
+# /r/4
+# /r/4/bookings
+# "/r/4/reservations?{%22time%22:%2220:00%22,%22date%22:%223/24/2018%22,%22availability%22:[],%22showTables%22:false,%22bookingCount%22:44,%22animate%22:false}"
