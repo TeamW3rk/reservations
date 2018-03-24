@@ -1,3 +1,5 @@
 node_modules
 bundle.js
 .DS_Store
+newrelic.js
+newrelic_agent.log

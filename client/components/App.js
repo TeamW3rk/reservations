@@ -75,8 +75,7 @@ class Reservations extends React.Component {
         console.log('Success! Booking data  received:', data);
 
         let day = new Date(this.state.date).getUTCDate();
-        console.log(day, 'dayyyyy');
-        console.log(data)
+
         this.setState({bookingCount: data[day-1].bookings_count}); //set booking count from server
       },
       error: (error)=>{

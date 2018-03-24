@@ -1,3 +1,5 @@
+const nr = require('newrelic');
+
 const express = require('express');
 
 const app = require('./app')
