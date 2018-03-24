@@ -28,9 +28,9 @@ class Reservations extends React.Component {
     }
   }
 
-  componentWillMount(){
-    this.fetchBookings();
-  }
+  // componentWillMount(){
+  //   this.fetchBookings();
+  // }
 
 
   updateTime(time){

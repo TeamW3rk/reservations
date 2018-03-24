@@ -20,10 +20,21 @@ router.get('/:id/reservations', (req,res)=>{
   
   var hour = +time.split(':')[0]; //extract hour from time property
   
-  reservations.availability(req.params.id, res, (data)=>{
+  reservations.availability(req.params.id, res, (data) => {
 
-    var availability = data.availability;
-    var times = availability.filter(table=> {
+    let avail = data.av.split(',');
+    var availability = [];
+
+    for (let i = 0; i < avail.length -3; i += 3){
+      availability.push({ 
+        day : Number(avail[i]),
+        hour : Number(avail[i + 1]),
+        min : Number(avail[i + 2])
+      });
+    }
+
+    console.log(availability);
+    var times = availability.filter(table => {
   
       return ((table.day === day) && ((hour+1 >= table.hour) && (table.hour >= hour-1)));
 
@@ -36,10 +47,10 @@ router.get('/:id/reservations', (req,res)=>{
 //Route requests for specific restaurant bookings count
 router.get('/:id/bookings', (req,res)=>{
 
-  reservations.bookings(req.params.id, res, (data)=>{
-    //send back booking times
-    res.send(data.bookings);
-  });
+  // reservations.bookings(req.params.id, res, (data)=>{
+  //   //send back booking times
+  //   res.send(data.bookings);
+  // });
 });
 
 app.get('*', (req,res)=>{

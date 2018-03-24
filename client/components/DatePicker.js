@@ -33,7 +33,7 @@ class DatePicker extends React.Component {
 
     return(<div>
             <label className="form-datepicker"> Date </label>
-                <input value={this.state.date} className="custom-select datepicker" id="datepicker"/>
+                <input readOnly value={this.state.date} className="custom-select datepicker" id="datepicker"/>
           </div>);
   }
 

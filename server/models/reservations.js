@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const models = require('../../database/dbModels');
 
-mongoose.connect('mongodb://localhost/restaurants');
+mongoose.connect('mongodb://localhost/testrestaurants');
 
 //searches a DB Model for particular id, and invokes callback on it
 const findInDb = function findInDb(model, id, res, callback){
 
   model.find({id:id}, (err, result)=>{
+
     if (err || result[0] === undefined){
       console.log('Error retrieving data', err || 'no results from DB');
       res.status(500).send(err);
