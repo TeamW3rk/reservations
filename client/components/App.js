@@ -28,9 +28,9 @@ class Reservations extends React.Component {
     }
   }
 
-  // componentWillMount(){
-  //   this.fetchBookings();
-  // }
+  componentWillMount(){
+    this.fetchBookings();
+  }
 
 
   updateTime(time){
@@ -75,7 +75,9 @@ class Reservations extends React.Component {
         console.log('Success! Booking data  received:', data);
 
         let day = new Date(this.state.date).getUTCDate();
-        this.setState({bookingCount:data[day-1].bookings_count}); //set booking count from server
+        console.log(day, 'dayyyyy');
+        console.log(data)
+        this.setState({bookingCount: data[day-1].bookings_count}); //set booking count from server
       },
       error: (error)=>{
         //Only display console logs in jest tests

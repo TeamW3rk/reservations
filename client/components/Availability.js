@@ -15,7 +15,7 @@ const sortByTime = (a, b)=>{
 
 const militaryTimeConverter = (times)=>{
   
-  return times.map((time)=>{
+  return times.map((time) => {
     var ampm;
     var stringTime;
 
@@ -52,7 +52,7 @@ var Availability = (props)=>{
     available.sort(sortByTime); //sort array in place by times;
 
     return (<div className="slots">
-             {available.map(table =><a className="confirmation" href={`${PATH}/confirmation.html`} target="_blank"><div className="table"> {`${table.time}`} </div></a>)}
+             {available.map((table, index) => <a index={index} className="confirmation" href={`${PATH}/confirmation.html`} target="_blank"><div className="table"> {`${table.time}`} </div></a>)}
            </div>)
   }
 

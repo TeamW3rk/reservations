@@ -3,7 +3,7 @@ const url = 'mongodb://localhost:27017';
 
 var cluster = require('cluster');
 var http = require('http');
-var  numCPUs = require('os').cpus().length; // 8
+var numCPUs = require('os').cpus().length; // 8
 
 
 function randomInt(min, max) {
@@ -41,10 +41,12 @@ let generateRandomTimeSlots = function generateRandomTimeSlots(restaurant, day, 
 let generateRestaurant = function (id) {
   let restaurant = {
     id: id,
-    av: '',
+    bk: '',
+    av: ''
   };
   for (let day = 1; day <= 31; day++) {
     generateRandomTimeSlots(restaurant, day, randomInt(0, 7)); 
+    restaurant.bk += randomInt(0, 50) + ",";
   }
   return restaurant;
 };
@@ -58,7 +60,6 @@ let generateBookings = function (id) {
   }
   return bookings;
 };
-
 
 
 var populateDatabaseWithRestaurants = async function() {
@@ -96,8 +97,19 @@ if (cluster.isMaster) {
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
-
+  // let count = 0; 
   cluster.on('exit', (worker, code, signal) => {
+    
+    // count++;
+
+    // if (count === numCPUs) {
+    //   var client = await MongoClient.connect(url);
+    //   var db = client.db('testrestaurants');
+    //   var collection = db.collection('testrestaurants');
+    //   await collection.createIndex({restId: 1});
+    //   client.close();
+    // }
+    
     console.log(`worker ${worker.process.pid} finished`);
   });
 } else {
