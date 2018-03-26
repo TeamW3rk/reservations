@@ -5,17 +5,43 @@ const reservations = require('./models/reservations');
 const bodyParser = require('body-parser');
 const url = require('url');
 
+const redis = require('redis');
+const REDIS_PORT = 6379;
+const client = redis.createClient(REDIS_PORT);
+
+function cacheAvailabilities(req, res, next) {
+  let id = `reservations${req.params.id}`;
+  client.get(id, (err, data) => {
+    if (err) throw err;
+    if (data !== null) {
+      res.send(JSON.parse(data));
+    } else {
+      next();
+    }
+  });
+}
+
+function cacheBookings(req, res, next) {
+  let id = `bookings${req.params.id}`;
+  client.get(id, (err, data) => {
+    if (err) throw err;
+    if (data !== null) {
+      res.send(JSON.parse(data));
+    } else {
+      next();
+    }
+  });
+}
+
 //display widget to all restaurant_id specific endpoints
 router.use('/:id', express.static('public'));
 
 //Route requests for specific restaurant availability
-router.get('/:id/reservations', (req,res)=>{
-
+router.get('/:id/reservations', cacheAvailabilities, (req,res) => {
+  console.log(req.params.id);
   //parse request params from URL
-  // console.log(req.url);
   var requestedTimes = JSON.parse(decodeURIComponent(url.parse(req.url).query));
-  // console.log(typeof requestedTimes.date);
-  // console.log(requestedTimes);
+
   //extract day & time from date property
   var day = (new Date(requestedTimes.date)).getUTCDate(); // Hardcoded date.....
   var time = requestedTimes.time;
@@ -35,19 +61,17 @@ router.get('/:id/reservations', (req,res)=>{
       });
     }
 
-    // console.log(availability);
     var times = availability.filter(table => {
-  
       return ((table.day === day) && ((hour+1 >= table.hour) && (table.hour >= hour-1)));
-
     })
-    //send back table availability times
+
+    client.setex(`reservations${req.params.id}`, 60, JSON.stringify(times));
     res.send(times); 
   });
 });
 
 //Route requests for specific restaurant bookings count
-router.get('/:id/bookings', (req,res) => {
+router.get('/:id/bookings', cacheBookings, (req,res) => {
 
   reservations.availability(req.params.id, res, (data) => {
     let bookingsArray = data.bk.split(',');
@@ -63,11 +87,12 @@ router.get('/:id/bookings', (req,res) => {
       })
     }
 
+    client.setex(`bookings${req.params.id}`, 60, JSON.stringify(bookingsInfo.bookings));
     res.send(bookingsInfo.bookings);
   });
 });
 
-app.get('*', (req,res)=>{
+app.get('*', (req,res) => {
   res.status(404).sendFile(path.join(__dirname, '../public/404.html'));
 });
 
