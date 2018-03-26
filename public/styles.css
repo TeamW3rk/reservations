@@ -1,0 +1,188 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Explore
+ @Kyle-Chambers
+Sign out
+1
+0 0 fullstack-flapjacks/proxy-zaid
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Insights
+proxy-zaid/reservation-service/public/styles.css
+6dca52a  20 days ago
+@zaidhusseini zaidhusseini CSS cleanup for menu and suggested rest on proxy
+     
+159 lines (134 sloc)  2.56 KB
+/*@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css");*/
+
+.header{
+  font-weight: bold;
+  text-align: center;
+  padding-top: 8px;
+  border-bottom: 1px solid;
+  border-color: #E1E1E1;
+  padding-bottom: 7px
+}
+
+span.title{
+  font-size: 20px;
+}
+
+.reservation-widget{
+  width: 300px;
+  margin-top: 10px;
+  box-shadow: 0px 0px 15px lightgrey;
+  font-family: sans-serif;
+  padding-bottom: 8px
+}
+
+.party-size, .datepicker, .timeselector{
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid;
+  border-color: #E1E1E1;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+.party-size:hover, .datepicker:hover, .timeselector:hover{
+  cursor: pointer;
+  border-color: #DA3743;
+  border-width: 2px;
+}
+
+.party-size{
+  width: 100%;
+}
+
+.datepicker, .timeselector{
+  width: 120px;
+  height: 30px;
+}
+
+.timeselector, .form-timeselector{
+  margin-left: 32px;
+}
+
+.form-party-size, .form-datepicker, .form-timeselector{
+  margin-top:5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+label.form-datepicker, label.form-timeselector, label.form-party-size{
+  margin-top: 12px;
+  height: 10px;
+}
+select#timeselector, input#datepicker, select#party-size{
+  padding-left: 0;
+}
+
+.picker{
+  display: flex;
+  justify-content: space-between;
+}
+
+.findtable{
+  background-color: #DA3743;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 14px;
+  color: white;
+  height: 50px;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.findtable:hover{
+  background-color: #c4313c;
+  cursor: pointer;
+}
+
+.slots{
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
+.table{
+  text-align: center;
+  background-color: #DA3743;
+  color: white;
+  margin-bottom: 8px;
+  margin-right: 12px;
+  border-radius: 2px;
+  padding: 0 0.25rem;
+  height: 32px;
+  line-height: 32px;
+  width: 75px;
+  font-size: 14px;
+}
+
+.table:hover{
+  background-color: #c4313c;
+  cursor: pointer;
+}
+
+.bookingcount{
+  margin: 5px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#loader {
+    border: 3px solid #f3f3f3; /* Light grey */
+    border-top: 3px solid #DA3743; /* Open Table Red */
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    animation: spin 0.5s linear infinite;
+    margin: 0px auto;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hide{
+  display:none;
+}
+
+a.confirmation{
+ text-decoration: none;
+}
+
+
+.confirmed{
+  display: block;
+  margin: 0px auto;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+.confirmation-message{
+  font-size: 50px;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  left: 250px;
+}
+© 2018 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
+About
+Press h to open a hovercard with more details.

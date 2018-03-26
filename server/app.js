@@ -10,7 +10,7 @@ app.use((req, res, next)=> {
 });
 
 //show basic widget on index.html
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 app.use('/r', restaurantRouter);
 

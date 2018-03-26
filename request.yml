@@ -7,7 +7,7 @@ scenarios:
   - flow:
       - loop:
           - get:
-              url: "/r/4/bookings"
+              url: "/r/4"
         count: 50
 
 
